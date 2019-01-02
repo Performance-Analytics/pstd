@@ -4,9 +4,9 @@ def print_training_session(session):
     if session.extra_reps > 0:
         volume_notation += ", {}".format(session.extra_reps)
 
-    print("Training Max: {}".format(session.training_max))
-    print("E1RM: {}".format(session.e1rm))
+    print("Training Max:", session.training_max)
+    print("E1RM:", session.e1rm)
     print("Intensity Used: {:.2%}".format(session.intensity))
-    print("Volume: {}".format(volume_notation))
-    print("Load Used: {}".format(session.load))
+    print("Volume:", volume_notation)
+    print("Load Used:", session.load)
     print()
