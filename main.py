@@ -90,17 +90,17 @@ class TrainingSession(object):
 
 # --------- The following is for demonstrative purposes. ---------
 
-session1 = ParametricProgrammingGenerator.generate_session()
-session1.training_max = 200 # kg
-userio.print_training_session(session1)
-session2_training_max = 210 # kg
-session2_load_size = ParametricProgrammingGenerator.determine_load_size(
+s1 = ParametricProgrammingGenerator.generate_session()
+s1.training_max = 200
+userio.print_training_session(s1)
+s2_training_max = 210
+s2_load_size = ParametricProgrammingGenerator.determine_load_size(
     "medium",
-    session1.training_max,
-    session2_training_max
+    s1.training_max,
+    s2_training_max
 )
-session2 = ParametricProgrammingGenerator.generate_session(
-    load_size=session2_load_size
+s2 = ParametricProgrammingGenerator.generate_session(
+    load_size=s2_load_size
 )
-session2.training_max = session2_training_max
-userio.print_training_session(session2)
+s2.training_max = s2_training_max
+userio.print_training_session(s2)
