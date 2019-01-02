@@ -102,6 +102,7 @@ class TrainingSession(object):
 s1 = ParametricProgrammingGenerator.generate_session()
 s1.training_max = 200
 userio.print_training_session(s1)
+
 s2_training_max = 210
 s2_load_size = ParametricProgrammingGenerator.determine_load_size(
     load_sizes.MEDIUM,
