@@ -1,6 +1,15 @@
 import userio
 
-fatigue_ratings = ["low", "medium", "high"]
+class load_sizes(object):
+    SMALL = "small"
+    MEDIUM = "medium"
+    LARGE = "large"
+    SUPRAMAXIMAL = "supramaximal"
+
+class fatigue_ratings(object):
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "HIGH"
 
 # TODO: Implement supramaximal load size functionality (targets grow with each
 # use).
@@ -8,14 +17,14 @@ fatigue_ratings = ["low", "medium", "high"]
 defaults = {
     "reps per set": 5,
     "inol targets": {
-        "small": 0.375,
-        "medium": 0.5,
-        "large": 0.75
+        load_sizes.SMALL: 0.375,
+        load_sizes.MEDIUM: 0.5,
+        load_sizes.LARGE: 0.75
     },
     "intensity targets": {
-        "small": 0.6,
-        "medium": 0.7,
-        "large": 0.8
+        load_sizes.SMALL: 0.6,
+        load_sizes.MEDIUM: 0.7,
+        load_sizes.LARGE: 0.8
     }
 }
 
@@ -26,7 +35,7 @@ class ParametricProgrammingGenerator(object):
     @staticmethod
     def generate_session(inol_targets=defaults["inol targets"],
                          intensity_targets=defaults["intensity targets"],
-                         load_size="large",
+                         load_size=load_sizes.LARGE,
                          reps_per_set=defaults["reps per set"]):
         def calculate_set_quantity(reps_per_set, intensity, inol):
             """
@@ -61,17 +70,17 @@ class ParametricProgrammingGenerator(object):
                             previous_training_max,
                             current_training_max):
         if current_training_max > previous_training_max: # TM improved.
-            if fatigue_rating == "low":
-                return "large"
+            if fatigue_rating == fatigue_ratings.LOW:
+                return load_sizes.LARGE
             else:
-                return "medium"
+                return load_sizes.MEDIUM
         else: # TM stagnated or regressed.
-            if fatigue_rating == "low":
-                return "supramaximal"
-            elif fatigue_rating == "medium":
-                return "medium"
+            if fatigue_rating == fatigue_ratings.LOW:
+                return load_sizes.SUPRAMAXIMAL
+            elif fatigue_rating == fatigue_ratings.MEDIUM:
+                return load_sizes.MEDIUM
             else:
-                return "small"
+                return load_sizes.SMALL
 
 class TrainingSession(object):
     sets: int
@@ -95,7 +104,7 @@ s1.training_max = 200
 userio.print_training_session(s1)
 s2_training_max = 210
 s2_load_size = ParametricProgrammingGenerator.determine_load_size(
-    "medium",
+    load_sizes.MEDIUM,
     s1.training_max,
     s2_training_max
 )
