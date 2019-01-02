@@ -1,3 +1,5 @@
+import userio
+
 fatigue_ratings = ["low", "medium", "high"]
 
 # TODO: Implement supramaximal load size functionality (targets grow with each
@@ -39,7 +41,7 @@ class ParametricProgrammingGenerator(object):
             """
             total_reps = round(inol * 100 * (1 - intensity))
 
-            extra_reps = total_reps % reps_per_set
+            extra_reps = round(total_reps % reps_per_set)
             sets = (total_reps - extra_reps) / reps_per_set
             return sets, extra_reps
         
@@ -63,14 +65,7 @@ class ParametricProgrammingGenerator(object):
                 return "large"
             else:
                 return "medium"
-        elif current_training_max == previous_training_max: # TM stagnated.
-            if fatigue_rating == "low":
-                return "supramaximal"
-            elif fatigue_rating == "medium":
-                return "medium"
-            else:
-                return "small"
-        else: # TM regressed.
+        else: # TM stagnated or regressed.
             if fatigue_rating == "low":
                 return "supramaximal"
             elif fatigue_rating == "medium":
@@ -97,18 +92,10 @@ class TrainingSession(object):
 
 session1 = ParametricProgrammingGenerator.generate_session()
 session1.training_max = 200 # kg
-print([
-    session1.sets,
-    session1.reps_per_set,
-    session1.extra_reps,
-    session1.intensity,
-    session1.training_max,
-    session1.e1rm,
-    session1.load
-])
+userio.print_training_session(session1)
 session2_training_max = 210 # kg
 session2_load_size = ParametricProgrammingGenerator.determine_load_size(
-    "high",
+    "medium",
     session1.training_max,
     session2_training_max
 )
@@ -116,12 +103,4 @@ session2 = ParametricProgrammingGenerator.generate_session(
     load_size=session2_load_size
 )
 session2.training_max = session2_training_max
-print([
-    session2.sets,
-    session2.reps_per_set,
-    session2.extra_reps,
-    session2.intensity,
-    session2.training_max,
-    session2.e1rm,
-    session2.load
-])
+userio.print_training_session(session2)
