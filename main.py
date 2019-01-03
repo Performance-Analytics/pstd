@@ -87,25 +87,33 @@ class SessionFactory(object):
             else:
                 return "small"
 
-def session_gen(config, debug=False):
-    session_gen.training_max_previous = 0
-    session_gen.training_max_current = 0
-    def callback(fatigue_rating, training_max):
-        session_gen.training_max_previous = session_gen.training_max_current
-        session_gen.training_max_current = training_max
+class session_gen(object):
+    def __init__(self, config, debug=False):
+        self.config = config
+        self.debug = debug
+        self.training_max_previous = 0
+        self.training_max_current = 0
+    
+    def __iter__(self):
+        return self
+    
+    def callback(self, fatigue_rating, training_max):
+        self.training_max_previous = self.training_max_current
+        self.training_max_current = training_max
         load_size = SessionFactory.determine_load_size(
             fatigue_rating,
-            session_gen.training_max_previous,
-            session_gen.training_max_current
+            self.training_max_previous,
+            self.training_max_current
         )
         session = SessionFactory.generate_session(
-            config=config,
+            config=self.config,
             load_size=load_size
         )
-        session.training_max = session_gen.training_max_current
+        session.training_max = self.training_max_current
         return session
-    while True:
-        yield callback
+    
+    def __next__(self):
+        return self.callback
 
 # --------- The following is for demonstrative purposes. ---------
 
