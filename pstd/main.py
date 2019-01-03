@@ -9,7 +9,7 @@ if debug:
 
 def mainloop(config, trainee_name, debug=False):
     iterator = pickling.load_state(trainee_name)
-    if not iterator:
+    if iterator is None:
         iterator = sessions.SessionBuilderCallbackIterator(config, debug)
     while True:
         session_builder = next(iterator)
