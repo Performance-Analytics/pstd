@@ -3,15 +3,16 @@ def print_training_cycle_config(config):
         print("{}: {}".format(key, config[key]))
     print()
 
-def print_training_session(session):
+def print_training_session(session, debug=False):
     volume_notation = "{}x{}".format(int(session.sets),
                                      int(session.reps_per_set))
     if session.extra_reps > 0:
         volume_notation += ", {}".format(session.extra_reps)
 
-    print("Training Max:", session.training_max)
-    print("E1RM:", session.e1rm)
-    print("Intensity Used: {:.2%}".format(session.intensity))
+    if debug:
+        print("Training Max:", session.training_max)
+        print("E1RM:", session.e1rm)
+        print("Intensity Used: {:.2%}".format(session.intensity))
     print("Volume:", volume_notation)
     print("Load Used:", session.load)
     print()

@@ -87,27 +87,39 @@ class ParametricProgrammingGenerator(object):
             else:
                 return "small"
 
-
-# --------- The following is for demonstrative purposes. ---------
-
-userio.print_training_cycle_config(default_config)
-
-def mainloop(config):
-    training_max_previous = 0
-    while True:
-        fatigue_rating = userio.get_fatigue_rating()
-        training_max_current = userio.get_training_max()
+def session_gen(config, debug=False):
+    session_gen.training_max_previous = 0
+    session_gen.training_max_current = 0
+    def callback(fatigue_rating, training_max):
+        session_gen.training_max_previous = session_gen.training_max_current
+        session_gen.training_max_current = training_max
         load_size = ParametricProgrammingGenerator.determine_load_size(
             fatigue_rating,
-            training_max_previous,
-            training_max_current
+            session_gen.training_max_previous,
+            session_gen.training_max_current
         )
         session = ParametricProgrammingGenerator.generate_session(
             config=config,
             load_size=load_size
         )
-        session.training_max = training_max_current
-        userio.print_training_session(session)
-        training_max_previous = training_max_current
+        session.training_max = session_gen.training_max_current
+        return session
+    while True:
+        yield callback
 
-mainloop(default_config)
+# --------- The following is for demonstrative purposes. ---------
+
+debug = False
+
+if debug:
+    userio.print_training_cycle_config(default_config)
+
+def mainloop(config, debug=False):
+    generator = session_gen(config, debug)
+    while True:
+        session_builder = next(generator)
+        session = session_builder(userio.get_fatigue_rating(),
+                                  userio.get_training_max())
+        userio.print_training_session(session)
+
+mainloop(default_config, debug)
