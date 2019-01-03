@@ -1,8 +1,5 @@
 import userio
 
-def inol(reps, intensity):
-    return reps / (1 - intensity) / 100
-
 class TrainingSession(object):
     sets: int
     reps_per_set: int
