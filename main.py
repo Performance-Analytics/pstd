@@ -96,7 +96,7 @@ class ParametricProgrammingGenerator(object):
                 return "small"
 
 
-# --"low"ing is for demonstrative purposes. ---------
+# --------- The following is for demonstrative purposes. ---------
 
 s1 = ParametricProgrammingGenerator.generate_session()
 s1.training_max = 200
