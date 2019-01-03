@@ -30,7 +30,7 @@ default_config = {
     "supramaximal inol increment": 0.1
 }
 
-class ParametricProgrammingGenerator(object):
+class SessionFactory(object):
     @staticmethod
     def generate_session(config=default_config,
                          load_size="large"):
@@ -93,12 +93,12 @@ def session_gen(config, debug=False):
     def callback(fatigue_rating, training_max):
         session_gen.training_max_previous = session_gen.training_max_current
         session_gen.training_max_current = training_max
-        load_size = ParametricProgrammingGenerator.determine_load_size(
+        load_size = SessionFactory.determine_load_size(
             fatigue_rating,
             session_gen.training_max_previous,
             session_gen.training_max_current
         )
-        session = ParametricProgrammingGenerator.generate_session(
+        session = SessionFactory.generate_session(
             config=config,
             load_size=load_size
         )
