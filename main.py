@@ -1,8 +1,5 @@
 import userio
 
-# TODO: Implement supramaximal load size functionality (targets grow with each
-# use).
-
 def inol(reps, intensity):
     return reps / (1 - intensity) / 100
 
