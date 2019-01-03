@@ -14,29 +14,54 @@ class fatigue_ratings(object):
 # TODO: Implement supramaximal load size functionality (targets grow with each
 # use).
 
-defaults = {
-    "reps per set": 5,
-    "inol targets": {
+def inol(reps, intensity):
+    return reps / (1 - intensity) / 100
+
+class TrainingCycleConfig(object):
+    def __init__(self,
+                 reps_per_set,
+                 inol_targets,
+                 intensity_targets,
+                 supramaximal_inol_increment):
+        self.reps_per_set = reps_per_set
+        self.inol_targets = inol_targets
+        self.intensity_targets = intensity_targets
+        self.supramaximal_inol_increment = supramaximal_inol_increment
+
+class TrainingSession(object):
+    sets: int
+    reps_per_set: int
+    extra_reps: int
+    intensity: float
+    training_max: float
+
+    @property
+    def e1rm(self):
+        return 0.9 * self.training_max
+
+    @property
+    def load(self):
+        return self.intensity * self.e1rm
+
+default_config = TrainingCycleConfig(
+    reps_per_set=5,
+    inol_targets={
         load_sizes.SMALL: 0.375,
         load_sizes.MEDIUM: 0.5,
         load_sizes.LARGE: 0.75
     },
-    "intensity targets": {
+    intensity_targets={
         load_sizes.SMALL: 0.6,
         load_sizes.MEDIUM: 0.7,
         load_sizes.LARGE: 0.8
-    }
-}
-
-def inol(reps, intensity):
-    return reps / (1 - intensity) / 100
+    },
+    supramaximal_inol_increment=0.1
+)
 
 class ParametricProgrammingGenerator(object):
     @staticmethod
-    def generate_session(inol_targets=defaults["inol targets"],
-                         intensity_targets=defaults["intensity targets"],
-                         load_size=load_sizes.LARGE,
-                         reps_per_set=defaults["reps per set"]):
+    def generate_session(config=default_config,
+                         load_size=load_sizes.LARGE):
         def calculate_set_quantity(reps_per_set, intensity, inol):
             """
             Calculates the sets required to accomplish the work desired.
@@ -54,15 +79,17 @@ class ParametricProgrammingGenerator(object):
             sets = (total_reps - extra_reps) / reps_per_set
             return sets, extra_reps
         
-        sets, extra_reps = calculate_set_quantity(reps_per_set,
-                                                  intensity_targets[load_size],
-                                                  inol_targets[load_size])
+        sets, extra_reps = calculate_set_quantity(
+            config.reps_per_set,
+            config.intensity_targets[load_size],
+            config.inol_targets[load_size]
+        )
         
         session = TrainingSession()
         session.sets = sets
-        session.reps_per_set = reps_per_set
+        session.reps_per_set = config.reps_per_set
         session.extra_reps = extra_reps
-        session.intensity = intensity_targets[load_size]
+        session.intensity = config.intensity_targets[load_size]
         return session
 
     @staticmethod
@@ -82,20 +109,6 @@ class ParametricProgrammingGenerator(object):
             else:
                 return load_sizes.SMALL
 
-class TrainingSession(object):
-    sets: int
-    reps_per_set: int
-    extra_reps: int
-    intensity: float
-    training_max: float
-
-    @property
-    def e1rm(self):
-        return 0.9 * self.training_max
-
-    @property
-    def load(self):
-        return self.intensity * self.e1rm
 
 # --------- The following is for demonstrative purposes. ---------
 
