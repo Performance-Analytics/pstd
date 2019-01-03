@@ -69,7 +69,7 @@ class ParametricProgrammingGenerator(object):
             config["inol targets"]["large"] += config[
                 "supramaximal inol increment"
             ]
-            LoadSizes = "large"
+            load_size = "large"
         
         session = TrainingSession()
         session.sets = sets
