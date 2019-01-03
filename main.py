@@ -30,8 +30,6 @@ default_config = {
     "supramaximal inol increment": 0.1
 }
 
-userio.print_training_cycle_config(default_config)
-
 class ParametricProgrammingGenerator(object):
     @staticmethod
     def generate_session(config=default_config,
@@ -91,6 +89,8 @@ class ParametricProgrammingGenerator(object):
 
 
 # --------- The following is for demonstrative purposes. ---------
+
+userio.print_training_cycle_config(default_config)
 
 s1 = ParametricProgrammingGenerator.generate_session()
 s1.training_max = 200
