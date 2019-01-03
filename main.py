@@ -59,17 +59,17 @@ class ParametricProgrammingGenerator(object):
             sets = (total_reps - extra_reps) / reps_per_set
             return sets, extra_reps
         
-        sets, extra_reps = calculate_set_quantity(
-            config["reps per set"],
-            config["intensity targets"][load_size],
-            config["inol targets"][load_size]
-        )
-
         if load_size == "supramaximal":
             config["inol targets"]["large"] += config[
                 "supramaximal inol increment"
             ]
             load_size = "large"
+
+        sets, extra_reps = calculate_set_quantity(
+            config["reps per set"],
+            config["intensity targets"][load_size],
+            config["inol targets"][load_size]
+        )
         
         session = TrainingSession()
         session.sets = sets
@@ -102,9 +102,9 @@ s1 = ParametricProgrammingGenerator.generate_session()
 s1.training_max = 200
 userio.print_training_session(s1)
 
-s2_training_max = 210
+s2_training_max = 200
 s2_load_size = ParametricProgrammingGenerator.determine_load_size(
-    "medium",
+    "low",
     s1.training_max,
     s2_training_max
 )
