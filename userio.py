@@ -1,3 +1,8 @@
+def print_training_cycle_config(config):
+    for key in config:
+        print("{}: {}".format(key, config[key]))
+    print()
+
 def print_training_session(session):
     volume_notation = "{}x{}".format(int(session.sets),
                                      int(session.reps_per_set))
