@@ -3,7 +3,7 @@ import pickle
 def load_state(trainee_name, training_cycle_id=""):
     try:
         with open(
-            "{} - {}.pickle".format(trainee_name, training_cycle_id),
+            "{}{}.pickle".format(trainee_name, training_cycle_id),
             "rb"
         ) as file:
             return pickle.load(file)
