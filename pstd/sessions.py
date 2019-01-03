@@ -85,7 +85,7 @@ class SessionFactory(object):
             else:
                 return "small"
 
-class SessionGen(object):
+class SessionBuilderCallbackIterator(object):
     def __init__(self, config, debug=False):
         self.config = config
         self.debug = debug

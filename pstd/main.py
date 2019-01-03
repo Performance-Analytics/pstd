@@ -7,7 +7,7 @@ if debug:
     userio.print_training_cycle_config(sessions.default_config)
 
 def mainloop(config, debug=False):
-    generator = sessions.SessionGen(config, debug)
+    generator = sessions.SessionBuilderCallbackIterator(config, debug)
     while True:
         session_builder = next(generator)
         session = session_builder(userio.get_fatigue_rating(),
