@@ -87,7 +87,7 @@ class SessionFactory(object):
             else:
                 return "small"
 
-class session_gen(object):
+class SessionGen(object):
     def __init__(self, config, debug=False):
         self.config = config
         self.debug = debug
@@ -96,6 +96,9 @@ class session_gen(object):
     
     def __iter__(self):
         return self
+    
+    def __next__(self):
+        return self.callback
     
     def callback(self, fatigue_rating, training_max):
         self.training_max_previous = self.training_max_current
@@ -111,9 +114,6 @@ class session_gen(object):
         )
         session.training_max = self.training_max_current
         return session
-    
-    def __next__(self):
-        return self.callback
 
 # --------- The following is for demonstrative purposes. ---------
 
@@ -123,7 +123,7 @@ if debug:
     userio.print_training_cycle_config(default_config)
 
 def mainloop(config, debug=False):
-    generator = session_gen(config, debug)
+    generator = SessionGen(config, debug)
     while True:
         session_builder = next(generator)
         session = session_builder(userio.get_fatigue_rating(),
