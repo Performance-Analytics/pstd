@@ -1,5 +1,5 @@
-import userio
 import sessions
+import userio
 
 debug = False
 
