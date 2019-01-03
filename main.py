@@ -9,7 +9,7 @@ class TrainingSession(object):
 
     @property
     def e1rm(self):
-        return 0.9 * self.training_max
+        return self.training_max / 0.9
 
     @property
     def load(self):
@@ -92,18 +92,22 @@ class ParametricProgrammingGenerator(object):
 
 userio.print_training_cycle_config(default_config)
 
-s1 = ParametricProgrammingGenerator.generate_session()
-s1.training_max = 200
-userio.print_training_session(s1)
+def mainloop(config):
+    training_max_previous = 0
+    while True:
+        fatigue_rating = userio.get_fatigue_rating()
+        training_max_current = userio.get_training_max()
+        load_size = ParametricProgrammingGenerator.determine_load_size(
+            fatigue_rating,
+            training_max_previous,
+            training_max_current
+        )
+        session = ParametricProgrammingGenerator.generate_session(
+            config=config,
+            load_size=load_size
+        )
+        session.training_max = training_max_current
+        userio.print_training_session(session)
+        training_max_previous = training_max_current
 
-s2_training_max = 200
-s2_load_size = ParametricProgrammingGenerator.determine_load_size(
-    "low",
-    s1.training_max,
-    s2_training_max
-)
-s2 = ParametricProgrammingGenerator.generate_session(
-    load_size=s2_load_size
-)
-s2.training_max = s2_training_max
-userio.print_training_session(s2)
+mainloop(default_config)

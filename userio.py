@@ -15,3 +15,15 @@ def print_training_session(session):
     print("Volume:", volume_notation)
     print("Load Used:", session.load)
     print()
+
+def get_fatigue_rating():
+    while True:
+        fr = input("Subjective Fatigue Rating [low/medium/high]: ")
+        if fr in ["low", "medium", "high"]:
+            print()
+        return fr
+
+def get_training_max():
+    tm = float(input("Training Max: "))
+    print()
+    return tm
