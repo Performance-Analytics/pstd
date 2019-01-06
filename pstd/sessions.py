@@ -1,5 +1,9 @@
 default_config = {
-    "reps per set": 5,
+    "reps per set": {
+        "small": 5,
+        "medium": 5,
+        "large": 5
+    },
     "inol targets": {
         "small": 0.375,
         "medium": 0.5,
@@ -56,14 +60,14 @@ class SessionFactory(object):
             load_size = "large"
 
         sets, extra_reps = calculate_set_quantity(
-            config["reps per set"],
+            config["reps per set"][load_size],
             config["intensity targets"][load_size],
             config["inol targets"][load_size]
         )
         
         session = TrainingSession()
         session.sets = sets
-        session.reps_per_set = config["reps per set"]
+        session.reps_per_set = config["reps per set"][load_size]
         session.extra_reps = extra_reps
         session.intensity = config["intensity targets"][load_size]
         return session
