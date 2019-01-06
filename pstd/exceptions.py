@@ -1,0 +1,2 @@
+class InvalidFatigueRatingException(Exception):
+    pass

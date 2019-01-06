@@ -1,3 +1,5 @@
+import exceptions
+
 default_config = {
     "reps per set": {
         "small": 5,
@@ -76,18 +78,21 @@ class SessionFactory(object):
     def determine_load_size(fatigue_rating,
                             previous_training_max,
                             current_training_max):
-        if current_training_max > previous_training_max: # TM improved.
-            if fatigue_rating == "low":
-                return "large"
-            else:
-                return "medium"
-        else: # TM stagnated or regressed.
-            if fatigue_rating == "low":
-                return "supramaximal"
-            elif fatigue_rating == "medium":
-                return "medium"
-            else:
-                return "small"
+        try:
+            if current_training_max > previous_training_max: # TM improved.
+                    return {
+                        "low": "large",
+                        "medium": "medium",
+                        "high": "medium"
+                    }[fatigue_rating]
+            else: # TM stagnated or regressed.
+                return {
+                    "low": "supramaximal",
+                    "medium": "medium",
+                    "high": "small"
+                }[fatigue_rating]
+        except KeyError:
+            raise exceptions.InvalidFatigueRatingException(fatigue_rating)
 
 class SessionBuilderCallbackIterator(object):
     def __init__(self, config, debug=False):
@@ -103,16 +108,18 @@ class SessionBuilderCallbackIterator(object):
         return self.callback
     
     def callback(self, fatigue_rating, training_max):
-        self.training_max_previous = self.training_max_current
-        self.training_max_current = training_max
+        training_max_previous = self.training_max_current
+        training_max_current = training_max
         load_size = SessionFactory.determine_load_size(
             fatigue_rating,
-            self.training_max_previous,
-            self.training_max_current
+            training_max_previous,
+            training_max_current
         )
         session = SessionFactory.generate_session(
             config=self.config,
             load_size=load_size
         )
-        session.training_max = self.training_max_current
+        self.training_max_previous = training_max_previous
+        self.training_max_current = training_max_current
+        session.training_max = training_max_current
         return session
