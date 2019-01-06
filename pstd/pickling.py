@@ -1,6 +1,4 @@
-import errno
-import os
-import pickle
+import errno, os, pickle
 
 storage_path = "training_cycles"
 
