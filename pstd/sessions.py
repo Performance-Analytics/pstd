@@ -1,4 +1,4 @@
-import exceptions
+import pstd.exceptions
 
 default_config = {
     "reps per set": {
@@ -92,7 +92,7 @@ class SessionFactory(object):
                     "high": "small"
                 }[fatigue_rating]
         except KeyError:
-            raise exceptions.InvalidFatigueRatingException(fatigue_rating)
+            raise pstd.exceptions.InvalidFatigueRatingException(fatigue_rating)
 
 class SessionBuilderCallbackIterator(object):
     def __init__(self, config, debug=False):

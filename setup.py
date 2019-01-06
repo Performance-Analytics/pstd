@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pstd",
-    version="0.0.1",
+    version="0.0.2",
     author="Carter Hinsley",
     author_email="carterhinsley@outlook.com",
     description="Procedural Strength Training Director",
